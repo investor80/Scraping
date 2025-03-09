@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scraper de Títulos</title>
+    <script>
+        function scrapeData() {
+            let url = document.getElementById("url").value;
+            if (!url) {
+                alert("Por favor, insira uma URL.");
+                return;
+            }
+
+            fetch(`/scrape?url=${encodeURIComponent(url)}`)
+                .then(response => response.json())
+                .then(data => {
+                    let resultDiv = document.getElementById("result");
+                    if (data.error) {
+                        resultDiv.innerHTML = `<p style="color:red;">Erro: ${data.error}</p>`;
+                    } else {
+                        resultDiv.innerHTML = `<h3>Resultados para ${data.url}</h3>
+                            <h4>H1:</h4><p>${data.titles.h1.join("<br>") || "Nenhum encontrado"}</p>
+                            <h4>H2:</h4><p>${data.titles.h2.join("<br>") || "Nenhum encontrado"}</p>
+                            <h4>H3:</h4><p>${data.titles.h3.join("<br>") || "Nenhum encontrado"}</p>`;
+                    }
+                })
+                .catch(error => {
+                    document.getElementById("result").innerHTML = `<p style="color:red;">Erro ao buscar dados.</p>`;
+                });
+        }
+    </script>
+</head>
+<body>
+    <h2>Web Scraper de Títulos</h2>
+    <input type="text" id="url" placeholder="Digite a URL..." size="50">
+    <button onclick="scrapeData()">Scrapear</button>
+    <div id="result"></div>
+</body>
+</html>
