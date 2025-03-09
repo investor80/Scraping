@@ -1,12 +1,16 @@
 from flask import Flask, request, jsonify, render_template
+import os
 import requests
 from bs4 import BeautifulSoup
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder=os.path.abspath("templates"))
 
 @app.route('/')
 def home():
-    return render_template('index.html')
+    try:
+        return render_template('index.html')
+    except Exception as e:
+        return jsonify({"error": f"Erro ao carregar o template: {str(e)}"}), 500
 
 @app.route('/scrape', methods=['GET'])
 def scrape():
@@ -32,4 +36,6 @@ def scrape():
         return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    # Definir porta dinamicamente para o Render
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port)
