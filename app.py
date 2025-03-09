@@ -3,7 +3,8 @@ import os
 import requests
 from bs4 import BeautifulSoup
 
-app = Flask(__name__, template_folder=os.path.abspath("templates"))
+# Configuração do Flask para procurar templates no diretório raiz
+app = Flask(__name__, template_folder=os.path.abspath("."))
 
 @app.route('/')
 def home():
